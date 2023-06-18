@@ -71,8 +71,8 @@ onUnmounted(() => {
 
 const getClass = (active: boolean) => {
   return active
-    ? 'select-none block p-4 px-8 whitespace-nowrap transition-colors duration-200 bg-primary-600'
-    : 'select-none block p-4 px-8 hover:bg-gray-200 dark:hover:bg-gray-700 bg-gray-200 dark:bg-gray-800 whitespace-nowrap transition-colors duration-200'
+    ? 'select-none block p-4 px-8 whitespace-nowrap transition-colors duration-200 bg-primary-600 text-white'
+    : 'select-none block p-4 px-8 hover:bg-gray-200 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 whitespace-nowrap transition-colors duration-200'
 }
 </script>
 
@@ -80,7 +80,7 @@ const getClass = (active: boolean) => {
   <div class="mb-72">
     <div class="border-b border-gray-200 dark:border-gray-900">
       <ul
-        class="tabs flex max-w-full overflow-hidden overflow-x-auto scrollbar scrollbar-none"
+        class="tabs flex max-w-full overflow-hidden overflow-x-auto scrollbar scrollbar-none divide-x"
       >
         <li v-for="(tab, index) in tabs" :key="index">
           <a
@@ -92,7 +92,7 @@ const getClass = (active: boolean) => {
         </li>
       </ul>
     </div>
-    <div class="bg-gray-800 pb-10">
+    <div class="bg-white dark:bg-gray-800 pb-10">
       <slot :currentTab="currentTab"></slot>
     </div>
   </div>
