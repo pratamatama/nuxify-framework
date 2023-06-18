@@ -1,29 +1,6 @@
 <script setup lang="ts">
 import { useChangeCase } from '@vueuse/integrations/useChangeCase'
-import { VueElement } from 'vue'
-import { ObjectShape, object, string } from 'yup'
-import { type FormFields } from './FormLayout.vue'
-
-export interface FormSchema {
-  title: string
-  key?: string
-  fields: FormFields
-}
-
-export interface DetailFormSchema extends FormSchema {
-  mode?: 'single' | 'multirow' | 'browse'
-  onAdd?: (self: VueElement) => void
-}
-
-export interface Blueprint {
-  form: {
-    initialValues?: () => Promise<any>
-    onSubmit: (values: any) => Promise<void>
-    onInvalidSubmit: (errors: any) => Promise<void>
-    header: FormSchema
-    detail?: DetailFormSchema | DetailFormSchema[]
-  }
-}
+import { ObjectShape, object } from 'yup'
 
 const props = defineProps<{
   blueprint: Blueprint
@@ -31,7 +8,7 @@ const props = defineProps<{
 
 const toObjectShape = (fields: FormFields) => {
   return Object.keys(fields).reduce((obj: any, key: string) => {
-    if (!obj[key]) obj[key] = fields[key].rules
+    if (!obj[key]) obj[key] = fields[key].rules.label(fields[key].label)
     return obj as ObjectShape
   }, {})
 }
@@ -49,17 +26,23 @@ const validationSchema = computed(() => {
     }
   }
 
-  const finalShape = {
-    ...hShape,
-    ...dShape,
+  if (detail && Array.isArray(detail)) {
+    dShape = detail.reduce((obj, curr) => {
+      const key = curr.key ?? useChangeCase(curr.title, 'snakeCase').value
+      if (!obj[key]) {
+        obj[key] = object().shape(toObjectShape(curr.fields))
+      }
+      return obj
+    }, {} as any)
   }
 
-  return toTypedSchema(object().shape(finalShape))
-})
+  const finalShape = object().shape({
+    ...hShape,
+    ...dShape,
+  })
 
-const generateKey = (title: string, key?: string) => {
-  return useChangeCase(key ?? title, 'snakeCase').value
-}
+  return toTypedSchema(finalShape)
+})
 </script>
 
 <template>
@@ -118,20 +101,19 @@ const generateKey = (title: string, key?: string) => {
 
     <UContainer :ui="{ constrained: 'max-w-9xl' }">
       <!-- Header -->
-      <FormLayout :fields="blueprint.form.header.fields" />
+      <NFormLayout :fields="blueprint.form.header.fields" />
 
       <!-- Multiple detail -->
       <template v-if="Array.isArray(blueprint.form.detail)">
-        <FormLayout
+        <NFormLayout
           v-for="detail in blueprint.form.detail"
-          :key="generateKey(detail.title, detail.key)"
           :title="detail.title"
           :fields="detail.fields"
         />
       </template>
 
       <!-- Single detail -->
-      <FormLayout
+      <NFormLayout
         v-else-if="blueprint.form.detail"
         :title="blueprint.form.detail.title"
         :fields="blueprint.form.detail.fields"

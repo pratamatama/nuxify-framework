@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { date, string } from 'yup'
-import Form, { Blueprint } from '~/components/Form.vue'
+import NForm from '~/components/NForm.vue'
 
-const formRef = ref<InstanceType<typeof Form>>()
+const formRef = ref<InstanceType<typeof NForm>>()
 
 const blueprint: Blueprint = reactive({
   form: {
@@ -19,24 +19,23 @@ const blueprint: Blueprint = reactive({
           required: false,
           leadingIcon: 'i-heroicons-envelope',
           placeholder: 'someone@example.com',
-          rules: string().required().min(10).max(100),
+          rules: string().email().required(),
           onChange: (value) => {
             blueprint.form.header.fields.username.value = value
-            console.log(value)
           },
         },
         password: {
           type: 'text',
           label: 'Password',
           disabled: false,
-          rules: string().required().min(10).max(100),
+          rules: string().required(),
           onChange: (value) => {},
         },
         username: {
           type: 'text',
           label: 'Username',
           disabled: false,
-          rules: string().required().min(10).max(100),
+          rules: string().required(),
           value: '',
           onChange: (value) => {},
         },
@@ -44,8 +43,8 @@ const blueprint: Blueprint = reactive({
           type: 'select',
           label: 'Status',
           disabled: false,
-          rules: string().required().min(10).max(100),
-          value: null,
+          rules: string().required(),
+          value: undefined,
           displayKey: 'label',
           valueKey: 'id',
           options: [
@@ -71,7 +70,7 @@ const blueprint: Blueprint = reactive({
           type: 'date',
           label: 'Birthdate',
           disabled: false,
-          value: new Date(),
+          value: new Date().toISOString(),
           rules: date().required(),
           onChange: (value) => {},
         },
@@ -79,7 +78,7 @@ const blueprint: Blueprint = reactive({
           type: 'datetime',
           label: 'Booking Date',
           disabled: false,
-          value: new Date(),
+          value: new Date().toISOString(),
           rules: date().required(),
           separator: '/',
           onChange: (value) => {},
@@ -88,7 +87,7 @@ const blueprint: Blueprint = reactive({
           type: 'browse',
           label: 'Sub Unit',
           disabled: false,
-          value: null,
+          value: undefined,
           rules: string().required(),
           displayKey: 'value_1',
           valueKey: 'id',
@@ -103,76 +102,144 @@ const blueprint: Blueprint = reactive({
         },
       },
     },
-    detail: {
-      title: 'Detail Form',
-      mode: 'multirow',
-      fields: {
-        detail_text: {
-          type: 'text',
-          label: 'Detail Text',
-          disabled: false,
-          rules: string().required().min(10).max(100),
-          onChange: (value) => {},
-        },
-        detail_select: {
-          type: 'select',
-          label: 'Detail Select',
-          disabled: false,
-          rules: string().required().min(10).max(100),
-          value: null,
-          options: ['Value 1', 'Value 2', 'Value 3'],
-          onChange: (value) => {},
-        },
-        detail_async_select: {
-          type: 'asyncSelect',
-          label: 'Detail Async Select',
-          disabled: false,
-          value: 1,
-          displayKey: 'name',
-          valueKey: 'id',
-          rules: string().required(),
-          options: async () => [],
-          onChange: (value) => {},
-        },
-        detail_date: {
-          type: 'date',
-          label: 'Detail Date',
-          disabled: false,
-          value: new Date(),
-          rules: date().required(),
-          onChange: (value) => {},
-        },
-        detail_datetime: {
-          type: 'datetime',
-          label: 'Detail DateTime',
-          disabled: false,
-          value: new Date(),
-          rules: date().required(),
-          onChange: (value) => {},
-        },
-        detail_browse: {
-          type: 'browse',
-          label: 'Detail Browse',
-          disabled: false,
-          value: null,
-          rules: string().required(),
-          displayKey: 'value_1',
-          valueKey: 'id',
-          options: async () => [],
-          onChange: (value) => {},
-          fields: [
-            { key: 'no', label: 'No', width: 'fit' },
-            { key: 'value_1', label: 'Value 1', width: 10 },
-            { key: 'value_2', label: 'Value 2', width: 10 },
-            { key: 'value_3', label: 'Value 3', width: 10 },
-          ],
+    detail: [
+      {
+        title: 'Detail Form 1',
+        mode: 'multirow',
+        fields: {
+          text: {
+            type: 'text',
+            label: 'Text',
+            disabled: false,
+            rules: string().required(),
+            onChange: (value) => {},
+          },
+          select: {
+            type: 'select',
+            label: 'Select',
+            disabled: false,
+            rules: string().required(),
+            value: undefined,
+            options: ['Value 1', 'Value 2', 'Value 3'],
+            onChange: (value) => {},
+          },
+          async_select: {
+            type: 'asyncSelect',
+            label: 'Async Select',
+            disabled: false,
+            value: 1,
+            displayKey: 'name',
+            valueKey: 'id',
+            rules: string().required(),
+            options: async () => [],
+            onChange: (value) => {},
+          },
+          date: {
+            type: 'date',
+            label: 'Date',
+            disabled: false,
+            value: new Date().toISOString(),
+            rules: date().required(),
+            onChange: (value) => {},
+          },
+          datetime: {
+            type: 'datetime',
+            label: 'DateTime',
+            disabled: false,
+            value: new Date().toISOString(),
+            rules: date().required(),
+            onChange: (value) => {},
+          },
+          browse: {
+            type: 'browse',
+            label: 'Browse',
+            disabled: false,
+            value: undefined,
+            rules: string().required(),
+            displayKey: 'value_1',
+            valueKey: 'id',
+            options: async () => [],
+            onChange: (value) => {},
+            fields: [
+              { key: 'no', label: 'No', width: 'fit' },
+              { key: 'value_1', label: 'Value 1', width: 10 },
+              { key: 'value_2', label: 'Value 2', width: 10 },
+              { key: 'value_3', label: 'Value 3', width: 10 },
+            ],
+          },
         },
       },
-    },
+      {
+        title: 'Detail Form 2',
+        mode: 'multirow',
+        fields: {
+          text: {
+            type: 'text',
+            label: 'Text',
+            disabled: false,
+            rules: string().required(),
+            onChange: (value) => {},
+          },
+          select: {
+            type: 'select',
+            label: 'Select',
+            disabled: false,
+            rules: string().required(),
+            value: undefined,
+            options: ['Value 1', 'Value 2', 'Value 3'],
+            onChange: (value) => {},
+          },
+          async_select: {
+            type: 'asyncSelect',
+            label: 'Async Select',
+            disabled: false,
+            value: 1,
+            displayKey: 'name',
+            valueKey: 'id',
+            rules: string().required(),
+            options: async () => [],
+            onChange: (value) => {},
+          },
+          date: {
+            type: 'date',
+            label: 'Date',
+            disabled: false,
+            value: new Date().toISOString(),
+            rules: date().required(),
+            onChange: (value) => {},
+          },
+          datetime: {
+            type: 'datetime',
+            label: 'DateTime',
+            disabled: false,
+            value: new Date().toISOString(),
+            rules: date().required(),
+            onChange: (value) => {},
+          },
+          browse: {
+            type: 'browse',
+            label: 'Browse',
+            disabled: false,
+            value: undefined,
+            rules: string().required(),
+            displayKey: 'value_1',
+            valueKey: 'id',
+            options: async () => [],
+            onChange: (value) => {},
+            fields: [
+              { key: 'no', label: 'No', width: 'fit' },
+              { key: 'value_1', label: 'Value 1', width: 10 },
+              { key: 'value_2', label: 'Value 2', width: 10 },
+              { key: 'value_3', label: 'Value 3', width: 10 },
+            ],
+          },
+        },
+      },
+    ],
   },
 })
 </script>
 
 <template>
-  <Form ref="formRef" :blueprint="blueprint" />
+  <NForm ref="formRef" :blueprint="blueprint" />
 </template>
