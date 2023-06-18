@@ -4,6 +4,7 @@ import { useChangeCase } from '@vueuse/integrations/useChangeCase'
 const props = defineProps<{
   fields: FormFields
   title?: string
+  hideTitle?: boolean
 }>()
 
 const buildName = (key: string) => {
@@ -17,7 +18,10 @@ const buildName = (key: string) => {
 
 <template>
   <div class="p-10 pb-0">
-    <h4 v-if="title" class="text-primary-500 text-2xl mt-20 mb-10">
+    <h4
+      v-if="title && !hideTitle"
+      class="text-primary-500 text-2xl mt-20 mb-10"
+    >
       {{ title }}
     </h4>
 

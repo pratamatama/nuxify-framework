@@ -12,7 +12,8 @@
     "@nuxt/devtools": "latest",
     "@nuxthq/ui": "^2.4.0",
     "@types/node": "^18",
-    "nuxt": "^3.5.2"
+    "nuxt": "^3.5.2",
+    "tailwind-scrollbar": "^3.0.4"
   },
   "dependencies": {
     "@vee-validate/nuxt": "^4.9.5",

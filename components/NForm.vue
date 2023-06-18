@@ -43,6 +43,10 @@ const validationSchema = computed(() => {
 
   return toTypedSchema(finalShape)
 })
+
+const generateKey = (title: string, key?: string) => {
+  return useChangeCase(key ?? title, 'snakeCase').value
+}
 </script>
 
 <template>
@@ -58,7 +62,6 @@ const validationSchema = computed(() => {
               type="button"
               variant="ghost"
               color="gray"
-              label="Back"
               icon="i-heroicons-arrow-left-20-solid"
               class="border-r border-gray-200 dark:border-gray-800"
               :ui="{
@@ -99,17 +102,37 @@ const validationSchema = computed(() => {
       </div>
     </div>
 
-    <UContainer :ui="{ constrained: 'max-w-9xl' }">
+    <UContainer :ui="{ constrained: 'max-w-9xl' }" class="mb-10">
       <!-- Header -->
       <NFormLayout :fields="blueprint.form.header.fields" />
 
       <!-- Multiple detail -->
       <template v-if="Array.isArray(blueprint.form.detail)">
-        <NFormLayout
-          v-for="detail in blueprint.form.detail"
-          :title="detail.title"
-          :fields="detail.fields"
-        />
+        <template v-if="blueprint.form.detailMode === 'rows'">
+          <NFormLayout
+            v-for="detail in blueprint.form.detail"
+            :key="generateKey(detail.title, detail.key)"
+            :title="detail.title"
+            :fields="detail.fields"
+          />
+        </template>
+
+        <div class="mt-20" v-else>
+          <Tabs>
+            <template #default="{ currentTab }">
+              <NFormLayout
+                v-for="detail in blueprint.form.detail"
+                :key="generateKey(detail.title, detail.key)"
+                :id="generateKey(detail.title, detail.key)"
+                :fields="detail.fields"
+                :label="detail.title"
+                :title="detail.title"
+                hide-title
+                v-show="currentTab === detail.title"
+              />
+            </template>
+          </Tabs>
+        </div>
       </template>
 
       <!-- Single detail -->

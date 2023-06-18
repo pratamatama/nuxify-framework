@@ -79,7 +79,7 @@ declare global {
   }
 
   interface DetailFormSchema extends FormSchema {
-    mode?: 'single' | 'multirow' | 'browse'
+    mode?: 'singular' | 'multiple' | 'selection'
     onAdd?: (self: VueElement) => void
   }
 
@@ -90,6 +90,7 @@ declare global {
       onInvalidSubmit: (errors: any) => Promise<void>
       header: FormSchema
       detail?: DetailFormSchema | DetailFormSchema[]
+      detailMode?: 'rows' | 'tabs'
     }
   }
 }
