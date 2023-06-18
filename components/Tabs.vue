@@ -79,7 +79,9 @@ const getClass = (active: boolean) => {
 <template>
   <div class="mb-72">
     <div class="border-b border-gray-200 dark:border-gray-900">
-      <ul class="tabs flex">
+      <ul
+        class="tabs flex max-w-full overflow-hidden overflow-x-auto scrollbar scrollbar-none"
+      >
         <li v-for="(tab, index) in tabs" :key="index">
           <a
             :href="'#tab-' + tab.label.toLowerCase().replace(/\s/g, '-')"
