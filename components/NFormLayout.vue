@@ -26,7 +26,11 @@ const buildName = (key: string) => {
     </h4>
 
     <div class="grid grid-cols-12 gap-7">
-      <div v-for="(field, key) in fields" :key="key" class="col-span-6">
+      <div
+        v-for="(field, key) in fields"
+        :key="key"
+        class="col-span-12 md:col-span-6"
+      >
         <NSelectMenu
           v-if="field.type === 'select' || field.type === 'asyncSelect'"
           :field="field"
